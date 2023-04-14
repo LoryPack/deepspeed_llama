@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Mykyta Baliesnyi <nikita.balesny@gmail.com>"]
 readme = "README.md"
-packages = [{include = "deepspeed_llama."}]
+packages = [{include = "deepspeed_llama"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
