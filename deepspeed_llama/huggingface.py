@@ -17,6 +17,7 @@ from transformers import (Seq2SeqTrainer, Trainer,
 from datasets.arrow_dataset import Dataset
 from deepspeed_llama.evaluation import evaluate_completions_exact_match
 from deepspeed_llama.dataset import get_hugface_datasets
+from deepspeed.utils.zero_to_fp32 import load_state_dict_from_zero_checkpoint
 import math
 import os
 
@@ -28,10 +29,12 @@ TTokenizer = Union[PreTrainedTokenizer, PreTrainedTokenizerFast]
 def safe_save_model_for_hf_trainer(trainer: Trainer, output_dir: str):
     """Collects the state dict and dump to disk."""
     state_dict = trainer.model.state_dict()
-    if trainer.args.should_save:
+    #if trainer.args.should_save:
+    if True:
         cpu_state_dict = {key: value.cpu() for key, value in state_dict.items()}
         del state_dict
         trainer._save(output_dir, state_dict=cpu_state_dict)  # noqa
+        torch.save(cpu_state_dict,'test_state_dict.pt')
 
 
 def get_compute_metrics_fn(tokenizer: TTokenizer, eval_dataset: Dataset, directory_path: str):
@@ -94,7 +97,7 @@ def get_compute_metrics_fn(tokenizer: TTokenizer, eval_dataset: Dataset, directo
         metrics = {}
 
         wandb.log({"validation_examples": wandb.Table(dataframe=df)})
-        
+
         accuracy = eval_results["accuracy"]
         metrics["accuracy"] = accuracy
         wandb.log({"validation_accuracy": accuracy})
@@ -218,8 +221,18 @@ def train(model: PreTrainedModel, train_dataset: Dataset, eval_dataset: Dataset,
     log("Training", verbose)
     trainer.train()
     if save_model_dir:
-        trainer.save_state()
-        safe_save_model_for_hf_trainer(trainer=trainer, output_dir=save_model_dir)
+        #trainer.deepspeed.save_checkpoint(save_model_dir)
+        trainer.save_model(save_model_dir)
+        #trainer.save_state()
+        #safe_save_model_for_hf_trainer(trainer=trainer, output_dir=save_model_dir)
+
+    #trainer.model.save_pretrained('test_pre_save_dir')
+    #trainer.deepspeed.save_checkpoint('test_pre_save_dir2')
+    #trainer.save_model('test_pre_save_dir3')
+    #trainer.deepspeed.save_16bit_model('test_pre_save_dir4')
+    #trainer.deepspeed.save_checkpoint('test_pre_save_dir6')
+    #trainer.save_model('test_pre_save_dir6')
+    #fp32_model = load_state_dict_from_zero_checkpoint(trainer.model, 'test_pre_save_dir2')
 
     log("Finished", verbose)
     wandb.finish()
