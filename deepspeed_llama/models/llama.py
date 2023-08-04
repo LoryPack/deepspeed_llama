@@ -10,10 +10,13 @@ from typing import Tuple
 
 
 def get_llama_hf_model(model_name_or_path: str) -> Tuple[LlamaForCausalLM, LlamaTokenizer]:
-    assert model_name_or_path in ['llama-30b', 'llama-7b', 'llama-13b', 'llama-65b', 'alpaca']
+    # assert model_name_or_path in ['llama-30b', 'llama-7b', 'llama-13b', 'llama-65b', 'alpaca', 'vicuna']
+    # this code can also load models that have been finetuned by us
 
     if model_name_or_path == 'alpaca':
         model_dir = '/data/public_models/llama/alpaca/finetuned_llama-7b/'
+    elif model_name_or_path == 'vicuna':
+        model_dir = '/data/public_models/vicuna/vicuna-7b-v1.3'
     else:
         model_dir = os.path.join(config.llama_hf_weights_dir, model_name_or_path)
 
