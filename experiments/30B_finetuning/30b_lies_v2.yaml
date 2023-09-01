@@ -1,32 +1,33 @@
 project_name: 'llama'
 fixed_parameters:
   output_dir: 'cache'
-  num_logs_per_epoch: 10  # this increase the time it takes quite a lot, as it takes ~5 minutes for a single evaluation call.
-  bf16: true  
+  num_logs_per_epoch: 1
+  bf16: true
   num_gpus: 8
   deepspeed: true
   data_dir: 'data' 
-  cpus_per_gpu: 10
+  cpus_per_gpu: 8
   deepspeed_config: 'run/deepspeed.config' 
   gradient_checkpointing: true
   randomise_data_order: true
   eval_accumulation_steps_config: 1
   is_phases_training: false 
   is_openai_experiment: false
-  ram_limit_gb: 600
+  ram_limit_gb: 1800
   ignore_loss_on_prompt_tokens: true
   gradient_accumulation_steps: 8
 hyperparameters:
   lr:
-    - 0.00001
     - 0.0001
+    - 0.00001
+    - 0.000001
   model_name:
     - 'llama-30b'
   train_path:
-      - 'example_train_tiny.jsonl'
+      - 'v2/finetuning_dataset_train_prepared.jsonl'
   validation_path:
-      - 'example_validation_tiny.jsonl'
+      - 'v2/finetuning_dataset_validation_prepared.jsonl'
   num_epochs:
-    - 1
+    - 5
   batch_size:
     - 32

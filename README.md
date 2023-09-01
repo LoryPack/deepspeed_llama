@@ -9,14 +9,14 @@ It assumes that you have access to a compute cluster with a SLURM scheduler and 
 ## Installation
 
 ```bash
-git clone git@github.com:nikebless/deepspeed_llama.git
+git clone git@github.com:LoryPack/deepspeed_llama.git
 cd deepspeed_llama
 pip install -e .
 ```
 
 ## Fine-tuning
 
-1. First, add your W&B API key to to the environment:
+1. First, add your W&B API key to the environment:
 
 ```bash
 export WANDB_API_KEY=your_api_key
@@ -28,7 +28,23 @@ export WANDB_API_KEY=your_api_key
 python run/sweep.py --experiment_name "testing" --config_file experiments/example_sweeps/13b.yaml
 ```
 
+Can use the flag `--run_interactive` to select the interactive partition (which may be more empty).
+
 This will run a sweep of experiments defined in `experiments/example_sweeps/13b.yaml` and log the learning curves and results to W&B.
+
+Notice the above file must be run in the head node, as it calls a slurm script (`run/agent_deepspeed.sh`) that submit jobs to the cluster. In turn, the slurm script calls the `run/train.py` Python script. 
+
+The results are stored in the folder where the `yaml` file is situated. A `logs` subfolder will contain log file from slurm script. A `sweep_configs` folder will contain the config used in the sweep and subfolders containing the model weights at the end of training and other things.
+
+The file size is large: 7B -> 13GB.
+
+| Model | File Size (GB) |
+|-------|----------------| 
+| 7B    | 13             | 
+| 13B   |                | 
+| 30B   | 61              | 
+
+
 
 ## Requirements
 

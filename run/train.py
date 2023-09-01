@@ -32,6 +32,7 @@ def main(project: str, name: str, config: Dict, args: Namespace):
     save_directory = os.path.join(os.path.dirname(args.file), f"{args.job_id}_{args.task_id}_results")
     print(f"Saving metrics and model output to {save_directory}")
     compute_metrics = get_compute_metrics_fn(tokenizer, eval_dataset, save_directory)
+    # notice the above metric is only used for evaluation, not training
 
     
     train(model, train_dataset, eval_dataset, compute_metrics, tokenizer, 

@@ -17,6 +17,7 @@ debugpy = "^1.6.7"
 poetry = "^1.4.2"
 sentencepiece = "^0.1.98"
 accelerate = "^0.18.0"
+lllm = {git = "https://github.com/LoryPack/LLM_lie_detection/"}
 
 
 [build-system]

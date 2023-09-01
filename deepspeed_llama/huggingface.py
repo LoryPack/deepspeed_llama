@@ -171,7 +171,7 @@ def train(model: PreTrainedModel, train_dataset: Dataset, eval_dataset: Dataset,
         learning_rate=wandb.config.lr,
         num_train_epochs=wandb.config.num_epochs,
         logging_steps=math.ceil(len(train_dataset) / (wandb.config.batch_size * wandb.config.num_logs_per_epoch)),
-        save_strategy="no",  # TODO: Make this a parameter
+        save_strategy="epoch",  # TODO: Make this a parameter
         logging_first_step=True,
         evaluation_strategy="steps",
         # lr_scheduler_type='constant' if wandb.config.lr_scheduler == "constant" else "linear",

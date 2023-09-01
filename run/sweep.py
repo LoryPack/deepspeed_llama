@@ -63,7 +63,7 @@ def sweep(args):
             'sbatch',
             '--nodes=1',
             f'--gpus={config["fixed_parameters"]["num_gpus"]}',
-            '--array',
+            '--array',  # not sure what this does
             f'0-{len(sweeps) - 1}',
             f'--cpus-per-gpu',
             f'{config["fixed_parameters"]["cpus_per_gpu"]}',
